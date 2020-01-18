@@ -1,41 +1,42 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-const key = NODE_ENV === 'development' ? 'super-puper-secret' : JWT_SECRET;
+const key = NODE_ENV === 'development' ? 'dev-secret' : JWT_SECRET;
 
 const User = require('../models/user');
 const Unauthorized = require('../errors/Unauthorized.js');
-const NotFoundError = require('../errors/Not-found-err.js');
+const NotFoundError = require('../errors/NotFoundError.js');
 const BadRequest = require('../errors/Bad-request.js');
-const InternalServerError = require('../errors/Internal-server-error.js');
+const InternalServerError = require('../errors/InternalServerError.js');
 
-module.exports.getUsers = (req,res,next) => {
-	User.find({}) 
-		.then((user) => {
-			if(!user) {
-				throw new InternalServerError('Произошла ошибка');
-			}
-			res.send({ data : user});
-		})
-		.catch(next);
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((user) => {
+      if (!user) {
+        throw new InternalServerError('Произошла ошибка');
+      }
+      res.send({ data: user });
+    })
+    .catch(next);
 };
 module.exports.getUsersId = (req, res, next) => {
-	User.findByIde(req.params.userId)
-		.then((user) => {
-		if(!user) {
-			throw new InternalServerError('Пользователя с таким id не существует!');
-		}	else {
-			res.send({data:user});
-		}
-	})
-		.catch((err) => {
-			if (err.message.indexOf('Cast to ObjectId failed') === 0) {
-				throw new NotFoundError('Неправильный id');
-		}
-	})
-		.catch(next);
+  User.findByIde(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        throw new InternalServerError('Пользователя с таким id не существует!');
+      } else {
+        res.send({ data: user });
+      }
+    })
+    .catch((err) => {
+      if (err.message.indexOf('Cast to ObjectId failed') === 0) {
+        throw new NotFoundError('Неправильный id');
+      }
+    })
+    .catch(next);
 };
 
 module.exports.signUp = async (req, res, next) => {
@@ -75,7 +76,7 @@ module.exports.login = (req, res, next) => {
       });
     })
     .catch(() => {
-      throw new Unauthorized('Неправильные почта или пароль mod');
+      throw new Unauthorized('Неправильные почта или пароль m');
     })
     .catch(next);
 };

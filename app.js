@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
@@ -43,8 +44,12 @@ app.post('/signin', celebrate({
 }), login);
 app.use('/users', auth, require('./routes/users'));
 app.use('/articles', auth, require('./routes/articles'));
+
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).send({ message: err.message });
 });
+app.use(errorLogger); // подключаем логгер ошибок
+app.use(errors()); // обработчик ошибок celebrate
 app.listen(PORT, () => {
 });
