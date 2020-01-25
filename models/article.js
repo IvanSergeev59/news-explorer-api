@@ -46,11 +46,12 @@ const articleSchema = new mongoose.Schema({
         return validator.isURL(str);
       },
       message: 'Эта строка должна быть url',
-    },
-    owner: {
-      type: ObjectId,
-      required: true,
-    },
-  },
+	},
+},
+	owner: {
+		type: String,
+		required: true,
+	  },
+  
 });
 module.exports = mongoose.model('article', articleSchema);

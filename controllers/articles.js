@@ -19,8 +19,7 @@ module.exports.createArticles = (req, res, next) => {
   } = req.body;
   const owner = req.user._id;
   Article.create({
-    keyword, title, text, source, link, image, owner,
-  })
+    keyword, title, text, source, link, image, owner })
     .then((article) => {
       if (!article) {
         throw new InternalServerError('Произошла ошибка');
@@ -35,7 +34,7 @@ module.exports.deleteArticles = (req, res, next) => {
     .then((article) => {
       if (req.user._id === article.owner.toString()) {
         Article.findByIdAndRemove(req.params.articleId)
-          .then((articleRemove) => res.send({ data: articleRemove }))
+          .then((articleRemove) => res.send({ date: articleRemove }))
           .catch((err) => res.status(500).send({ message: err }));
       } else {
         return next(new Unauthorized('Нет прав'));

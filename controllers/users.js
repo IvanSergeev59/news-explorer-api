@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-const key = NODE_ENV === 'development' ? 'dev-secret' : JWT_SECRET;
+const key = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
 
 const User = require('../models/user');
 const Unauthorized = require('../errors/Unauthorized.js');
@@ -23,7 +23,7 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 module.exports.getUsersId = (req, res, next) => {
-  User.findByIde(req.params.userId)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         throw new InternalServerError('Пользователя с таким id не существует!');
