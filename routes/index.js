@@ -10,6 +10,9 @@ const loginRoutes = app.post('/signin', validation.loginValidation, login);
 const usersRoutes = app.use('/users', auth, require('../routes/users'));
 const articlesRoutes = app.use('/articles', auth, require('../routes/articles'));
 
+const defaultRoutes = app.use('/', auth, (req, res) => {
+  res.send({ message: 'API' });
+});
 module.exports = {
-  usersRoutes, articlesRoutes, signUpRoutes, loginRoutes,
+  usersRoutes, articlesRoutes, signUpRoutes, loginRoutes, defaultRoutes,
 };

@@ -28,6 +28,4 @@ app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
 app.listen(PORT, () => {
 });
-app.get('/', (req, res) => {
-  res.send({ message: 'API' });
-});
+app.use('/', appRoutes.defaultRoutes);
