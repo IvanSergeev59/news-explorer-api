@@ -15,11 +15,11 @@ module.exports.getArticles = (req, res, next) => {
 };
 module.exports.createArticles = (req, res, next) => {
   const {
-    keyword, title, text, source, link, image,
+    keyword, title, text, source, link, image, date,
   } = req.body;
   const owner = req.user._id;
   Article.create({
-    keyword, title, text, source, link, image, owner })
+    keyword, title, text, source, link, image, owner, date })
     .then((article) => {
       if (!article) {
         throw new InternalServerError('Произошла ошибка');

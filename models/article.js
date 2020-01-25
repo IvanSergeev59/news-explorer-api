@@ -21,8 +21,8 @@ const articleSchema = new mongoose.Schema({
     minlength: 1,
   },
   date: {
-    type: Date,
-    default: Date.now,
+    type: String,
+    required: true,
   },
   source: {
     type: String,

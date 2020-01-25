@@ -10,7 +10,8 @@ routerArticle.post('/', celebrate({
     	text: Joi.string().required().min(1),
     	source: Joi.string().required().min(1),
     	link: Joi.string().required().min(1),
-    	image: Joi.string().required().min(1),
+		image: Joi.string().required().min(1),
+		date: Joi.string().required().min(1),
   }),
 	  headers: Joi.object().keys({
     'content-type': 'application/json',

@@ -30,4 +30,5 @@ module.exports = (req, res, next) => {
 
   next(); // пропускаем запрос дальше
   return { authorization };
+
 };

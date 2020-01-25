@@ -12,6 +12,7 @@ const NotFoundError = require('../errors/NotFoundError.js');
 const BadRequest = require('../errors/Bad-request.js');
 const InternalServerError = require('../errors/InternalServerError.js');
 
+const extractBearerToken = (header) => header.replace('Bearer ', '');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => {
@@ -23,12 +24,18 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 module.exports.getUsersId = (req, res, next) => {
-  User.findById(req.params.userId)
+  const { authorization } = req.headers;
+  const token = extractBearerToken(authorization);
+
+  const payload = jwt.verify(token, key)._id;
+
+
+  User.findById(payload)
     .then((user) => {
       if (!user) {
         throw new InternalServerError('Пользователя с таким id не существует!');
       } else {
-        res.send({ data: user });
+        res.send({ email: user.email, name: user.name });
       }
     })
     .catch((err) => {
