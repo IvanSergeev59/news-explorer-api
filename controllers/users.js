@@ -64,8 +64,7 @@ module.exports.signUp = async (req, res, next) => {
           email: user.email,
         });
       })
-      .catch(() => next(new ErrorsList.BadRequest(answers.errorHappened)))
-      .catch(next);
+      .catch(() => next(new ErrorsList.BadRequest(answers.errorHappened)));
   }
   return User;
 };

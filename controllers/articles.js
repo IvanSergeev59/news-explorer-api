@@ -18,7 +18,8 @@ module.exports.createArticles = (req, res, next) => {
   } = req.body;
   const owner = req.user._id;
   Article.create({
-    keyword, title, text, source, link, image, owner, date })
+    keyword, title, text, source, link, image, owner, date,
+  })
     .then((article) => {
       if (!article) {
         throw new ErrorsList.InternalServerError(answers.errorHappened);
