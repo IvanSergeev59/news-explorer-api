@@ -1,23 +1,20 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const answers = require('../answers/answers');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const key = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret';
 
 const User = require('../models/user');
-const Unauthorized = require('../errors/Unauthorized.js');
-const NotFoundError = require('../errors/NotFoundError.js');
-const BadRequest = require('../errors/Bad-request.js');
-const InternalServerError = require('../errors/InternalServerError.js');
+const ErrorsList = require('../errors/errorsList');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => {
       if (!user) {
-        throw new InternalServerError('Произошла ошибка');
+        throw new ErrorsList.InternalServerError(answers.errorHappened);
       }
       res.send({ data: user });
     })
@@ -33,14 +30,14 @@ module.exports.getUsersId = (req, res, next) => {
   User.findById(payload)
     .then((user) => {
       if (!user) {
-        throw new InternalServerError('Пользователя с таким id не существует!');
+        throw new ErrorsList.InternalServerError(answers.userNotFound);
       } else {
         res.send({ email: user.email, name: user.name });
       }
     })
     .catch((err) => {
       if (err.message.indexOf('Cast to ObjectId failed') === 0) {
-        throw new NotFoundError('Неправильный id');
+        throw new ErrorsList.NotFoundError(answers.wrongId);
       }
     })
     .catch(next);
@@ -52,7 +49,7 @@ module.exports.signUp = async (req, res, next) => {
   } = req.body;
   const isExist = await User.findOne({ email });
   if (isExist) {
-    return next(new BadRequest('Такой пользователь уже существует'));
+    return next(new ErrorsList.BadRequest(answers.doubleUser));
   }
   if (password) {
     bcrypt.hash(req.body.password, 10)
@@ -67,7 +64,7 @@ module.exports.signUp = async (req, res, next) => {
           email: user.email,
         });
       })
-      .catch(() => next(new BadRequest('произошла ошиба')))
+      .catch(() => next(new ErrorsList.BadRequest(answers.errorHappened)))
       .catch(next);
   }
   return User;
@@ -83,7 +80,7 @@ module.exports.login = (req, res, next) => {
       });
     })
     .catch(() => {
-      throw new Unauthorized('Неправильные почта или пароль m');
+      throw new ErrorsList.Unauthorized(answers.wrongEmailPas);
     })
     .catch(next);
 };

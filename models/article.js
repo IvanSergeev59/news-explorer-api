@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 
+// eslint-disable-next-line no-unused-vars
 const { ObjectId } = mongoose.Schema.Types;
 
 const articleSchema = new mongoose.Schema({
@@ -46,12 +47,12 @@ const articleSchema = new mongoose.Schema({
         return validator.isURL(str);
       },
       message: 'Эта строка должна быть url',
-	},
-},
-	owner: {
-		type: String,
-		required: true,
-	  },
-  
+    },
+  },
+  owner: {
+    type: String,
+    required: true,
+  },
+
 });
 module.exports = mongoose.model('article', articleSchema);

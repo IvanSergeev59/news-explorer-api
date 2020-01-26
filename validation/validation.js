@@ -21,4 +21,4 @@ const loginValidation = celebrate({
     'content-type': 'application/json',
   }).unknown(true),
 });
-module.exports = {signUpValidation, loginValidation}
+module.exports = { signUpValidation, loginValidation };

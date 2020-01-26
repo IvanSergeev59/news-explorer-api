@@ -1,13 +1,12 @@
 const Article = require('../models/article');
-const InternalServerError = require('../errors/InternalServerError.js');
-const NotFoundError = require('../errors/NotFoundError.js');
-const Unauthorized = require('../errors/Unauthorized.js');
+const ErrorsList = require('../errors/errorsList');
+const answers = require('../answers/answers');
 
 module.exports.getArticles = (req, res, next) => {
   Article.find({})
     .then((article) => {
       if (!article) {
-        throw new InternalServerError('Произошла ошибка');
+        throw new ErrorsList.InternalServerError(answers.errorHappened);
       }
       res.send({ data: article });
     })
@@ -22,7 +21,7 @@ module.exports.createArticles = (req, res, next) => {
     keyword, title, text, source, link, image, owner, date })
     .then((article) => {
       if (!article) {
-        throw new InternalServerError('Произошла ошибка');
+        throw new ErrorsList.InternalServerError(answers.errorHappened);
       }
       res.status(201).send({ data: article });
     })
@@ -37,14 +36,14 @@ module.exports.deleteArticles = (req, res, next) => {
           .then((articleRemove) => res.send({ date: articleRemove }))
           .catch((err) => res.status(500).send({ message: err }));
       } else {
-        return next(new Unauthorized('Нет прав'));
+        return next(new ErrorsList.Unauthorized(answers.wrongRight));
       }
       return Article;
     })
     .catch((err) => {
       if (err.message.indexOf('Cast to ObjectId failed') === 0) {
-        return next(new NotFoundError('Неправильный id'));
+        return next(new ErrorsList.NotFoundError(answers.wrongId));
       }
-      return next(new InternalServerError('Произошла ошибка'));
+      return next(new ErrorsList.InternalServerError(answers.errorHappened));
     });
 };

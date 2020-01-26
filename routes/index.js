@@ -1,18 +1,19 @@
 const express = require('express');
+const helmet = require('helmet');
 
 const app = express();
+app.use(helmet());
 const auth = require('../middlewares/auth.js');
-const { signUp, login } = require('../controllers/users');
-const validation = require('../validation/validation');
+const defaultUrl = require('../middlewares/default');
 
-const signUpRoutes = app.post('/signup', validation.signUpValidation, signUp);
-const loginRoutes = app.post('/signin', validation.loginValidation, login);
-const usersRoutes = app.use('/users', auth, require('../routes/users'));
+const signUpRoutes = app.use('/', require('../routes/users'));
+const loginRoutes = app.use('/', require('../routes/users'));
+const usersRoutes = app.use('/', require('../routes/users'));
 const articlesRoutes = app.use('/articles', auth, require('../routes/articles'));
 
-const defaultRoutes = app.use('/', auth, (req, res) => {
-  res.send({ message: 'API' });
-});
+const defaultRoutes = app.use('/', auth, defaultUrl);
+
+
 module.exports = {
   usersRoutes, articlesRoutes, signUpRoutes, loginRoutes, defaultRoutes,
 };
