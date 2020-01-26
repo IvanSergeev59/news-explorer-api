@@ -1,19 +1,16 @@
-const express = require('express');
+const router = require('express').Router();
+
 const helmet = require('helmet');
 
-const app = express();
-app.use(helmet());
+
+router.use(helmet());
 const auth = require('../middlewares/auth.js');
 const defaultUrl = require('../middlewares/default');
+router.use('/signin', require('../routes/login'));
+router.use('/signup', require('../routes/signUp'));
+router.use('/users', auth, require('../routes/users'));
+router.use('/articles', auth, require('../routes/articles'));
 
-const signUpRoutes = app.use('/', require('../routes/users'));
-const loginRoutes = app.use('/', require('../routes/users'));
-const usersRoutes = app.use('/', require('../routes/users'));
-const articlesRoutes = app.use('/articles', auth, require('../routes/articles'));
+router.use('/', auth, defaultUrl);
 
-const defaultRoutes = app.use('/', auth, defaultUrl);
-
-
-module.exports = {
-  usersRoutes, articlesRoutes, signUpRoutes, loginRoutes, defaultRoutes,
-};
+module.exports = router;
