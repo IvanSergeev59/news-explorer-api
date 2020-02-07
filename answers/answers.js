@@ -7,7 +7,7 @@ const wrongRight = 'Нет прав';
 const wrongAuth = 'Ошибка авторизации';
 const authNeeds = 'Необходима авторизация';
 const urlNotFound = 'Несуществующий ресурс';
-
+const wrongArticleId = 'Нет карточки с таким id';
 module.exports = {
   errorHappened,
   userNotFound,
@@ -18,4 +18,5 @@ module.exports = {
   wrongAuth,
   authNeeds,
   urlNotFound,
+  wrongArticleId,
 };

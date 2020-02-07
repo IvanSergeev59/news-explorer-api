@@ -34,8 +34,14 @@ module.exports.deleteArticles = (req, res, next) => {
     .then((article) => {
       if (req.user._id === article.owner.toString()) {
         Article.findByIdAndRemove(req.params.articleId)
-          .then((articleRemove) => res.send({ date: articleRemove }))
-          .catch((err) => res.status(500).send({ message: err }));
+          .then((articleRemove) => {
+            if (!articleRemove) {
+              throw new ErrorsList.InternalServerError(answers.errorHappened);
+            }
+
+            res.send({ date: articleRemove });
+          })
+          .catch(next);
       } else {
         return next(new ErrorsList.Unauthorized(answers.wrongRight));
       }
@@ -43,8 +49,8 @@ module.exports.deleteArticles = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message.indexOf('Cast to ObjectId failed') === 0) {
-        return next(new ErrorsList.NotFoundError(answers.wrongId));
+        return next(new ErrorsList.BadRequest(answers.wrongId));
       }
-      return next(new ErrorsList.InternalServerError(answers.errorHappened));
+      return next(new ErrorsList.InternalServerError(answers.wrongArticleId));
     });
 };
